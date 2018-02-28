@@ -478,8 +478,9 @@ setup();
 console.log("Starting server");
 ////////////////////SERVER STARTING/////////////////
 var express = require('express');
-
 var app = express();
+port = process.env.PORT || port;
+
 var server = app.listen(port, '0.0.0.0', 
   function() {
   console.log('Listening to port:  ' + port);
