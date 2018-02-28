@@ -134,7 +134,7 @@ function generateColors()
 function setup() {
   createCanvas(1920,1080);
 
-  socket = io.connect('http://localhost:8365');
+  socket = io.connect('https://blob-testdemo.herokuapp.com/Ptree/');
   blob = new Blob(1, socket.id, random(-width, width), random(-height, height), SIZE, 2, 1, 1);
     
   var data = {
