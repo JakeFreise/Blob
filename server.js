@@ -358,10 +358,10 @@ function updateAI(units)
             //console.log("Flock");
           }
           //units[i].updateForce();
+		   units[i].updateForce();
         }
         //wander
         //units[i].wander();
-        units[i].updateForce();
         //apply the aggregated force
       }
     }
