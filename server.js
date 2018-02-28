@@ -7,7 +7,7 @@ var bullets = [];
 var bulletCount = 0;
 var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
 var NUMBEROFAI = 25; 
-var NUMBEROFFRUITS = 12;
+var NUMBEROFFRUITS = 30;
 
 var Vec2 = require('vec2');
 
@@ -467,7 +467,7 @@ function makeBabyBlob(parent, size, index)
 function setup() 
 { 
   spawnFood(NUMBEROFFRUITS);
-  spawnAI(NUMBEROFAI);
+  //spawnAI(NUMBEROFAI);
   var emptyBullet = new Projectile(0, 0, 0, 0, 0, 0, 0);
   bullets[bulletCount] = emptyBullet;
   console.log("Set up complete");
