@@ -4,6 +4,7 @@ function Blob(alive, id,x,y,r, power, speed, defense){
   this.pos = createVector(x, y);
   this.r = r;
   this.vel = createVector(0,0);
+  this.acc = createVector(0,0);
   this.colors = [power*85, speed*85, defense*85];
   this.power = power;
   this.speed = speed;
@@ -11,12 +12,38 @@ function Blob(alive, id,x,y,r, power, speed, defense){
   this.dead = false;
   this.level = 0;
   
+  
+
+ this.updateForces = function() {
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+	
+	if(this.vel.mag() > this.speed)
+	{
+		this.vel.setMag(this.speed);
+	}
+ }
+
   this.update = function()
   {
     var newvel = createVector(mouseX-width/2, mouseY-height/2);
-    newvel.setMag(this.speed);
-    this.vel.lerp(newvel, 0.1);
-    this.pos.add(this.vel);
+    newvel.setMag(this.speed * this.speed);
+	this.applyForce(newvel);
+	//backforce
+	var backforce = this.vel.copy();
+	backforce.setMag(this.r * backforce.magSq());
+	backforce.rotate(180);
+	this.applyForce(backforce);
+	this.updateForces();
+  }
+  
+  this.recoil = function(forwardForce, totalPower)
+  {
+	  force = forwardForce.copy();
+      force.rotate(180);
+      force.mult((this.speed * totalPower)/this.defense);
+	  this.applyForce(force);
   }
   
   this.updateStats = function(alive, r, p, s, d)
@@ -37,6 +64,13 @@ function Blob(alive, id,x,y,r, power, speed, defense){
 	var blue = this.defense/totalStats * 255;
 	
 	this.colors = [red,green,blue];
+  }
+  
+  this.applyForce = function(force)
+  {
+    var mass = PI * this.r * this.r;
+    force.div(mass);
+    this.acc.add(force);
   }
   
   /*
@@ -131,8 +165,16 @@ function Blob(alive, id,x,y,r, power, speed, defense){
   
 
   this.constrain = function() {
-    this.pos.x = constrain(this.pos.x, -500, 500);
-    this.pos.y = constrain(this.pos.y, -500, 500);
+    //this.pos.x = constrain(this.pos.x, -500, 500);
+	if(this.pos.x + this.r > 500 || this.pos.x - this.r < -500)
+	{
+		this.vel.div(2);
+		this.vel.x = -this.vel.x;
+	}
+	if(this.pos.y + this.r > 500 || this.pos.y - this.r < -500)
+	{
+		this.vel.y = -this.vel.y;
+	}
   }
  
   this.show = function(){

@@ -17,7 +17,9 @@ function fire(power, speed, angle)
   var trajectory = createVector(mouseX-width/2, mouseY-height/2);
   trajectory.rotate(angle);
   console.log((blob.speed + speed)/(blob.power+power));
-  trajectory.setMag((blob.speed + speed)/(blob.power+power));
+  trajectory.setMag(((blob.speed + speed)/(blob.power+power)));
+  
+  //trajectory.add(blob.vel);
   var data = {
 	x1: blob.pos.x,
 	y1: blob.pos.y,
@@ -27,6 +29,8 @@ function fire(power, speed, angle)
     id: socket.id
   };
   socket.emit('projectile', data);
+  
+  blob.recoil(trajectory, data.p);
 }
 
 function mousePressed()
@@ -35,8 +39,6 @@ function mousePressed()
   {
     case 0:
     {
-      (blob.vel).rotate(180 + random(-5, 5));
-      (blob.vel).setMag(blob.speed+blob.power-blob.defense);
       fire(0,0,0);
     break;
     }
@@ -133,9 +135,9 @@ function generateColors()
 
 function setup() {
   createCanvas(1920,1080);
-
+  //socket = io.connect('http://localhost:8365');
   socket = io.connect('https://blob-testdemo.herokuapp.com');
-  blob = new Blob(1, socket.id, random(-width, width), random(-height, height), SIZE, 2, 1, 1);
+  blob = new Blob(1, socket.id, random(-scl, scl), random(-scl, scl), SIZE, 2, 1, 1);
     
   var data = {
     x: blob.pos.x,
@@ -159,7 +161,7 @@ function setup() {
 
   socket.on('foodbeat', 
 	function(data){
-		console.log(data);
+		//console.log(data);
 		data.map(function(item, index){
 			food[index] = new Food(item.x, item.y, item.type, item.r, item.alive);
 		});
