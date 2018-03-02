@@ -181,47 +181,8 @@ function setup() {
 		blob.updateStats(data.alive, data.r, data.p, data.s, data.d);
 		//console.log(blob.r +", "+blob.power+", "+blob.speed+", "+blob.defense);
 	});
-  
 	
-/*
-  for(var i = 0; i < 1000; i++)
-  {
-    var x = random(-width*4, width*4);
-    var y = random(-height*4,height*4);
-    //var size = generateSize();
-   // var psd = generateColors();
-    
-    //blobs[i] = new Blob(x, y,size,psd[0],psd[1],psd[2]);
-  }
-  
-  for(var i = 0; i < 10; i++)
-  {
-     bullet[i] = new Projectile(blob.pos, blob.vel, 0, 0, 0);
-  }
-  
-  for(var i = 0; i < 10; i++)
-  {
-     var x = random(-width*4, width*4);
-     var y = random(-height*4,height*4);    
-     food[i] = new Food(x,y);
-  }*/
-}
-
-function draw() {
-  background(0);
-  
-  
-  //fill(255);
-  //rect(0, 0, 100, 100);
-  //console.log(blob.alive);
-  if(blob.alive)
-  {
-	  translate(width / 2, height / 2);
-	  var newzoom = SCOPE * SIZE / blob.r;
-	  zoom = lerp(zoom, newzoom, 0.1);
-	  scale(zoom);
-	  translate(-blob.pos.x, -blob.pos.y);
-
+	noiseSeed(420);
 	noStroke();
 	var a = 0.0;
 	var b = 0.0;
@@ -241,6 +202,24 @@ function draw() {
 			rect(x*scl, y*scl, scl, scl);
 		}
 	}
+}
+
+function draw() {
+  background(0);
+  
+  
+  //fill(255);
+  //rect(0, 0, 100, 100);
+  //console.log(blob.alive);
+  if(blob.alive)
+  {
+	  translate(width / 2, height / 2);
+	  var newzoom = SCOPE * SIZE / blob.r;
+	  zoom = lerp(zoom, newzoom, 0.1);
+	  scale(zoom);
+	  translate(-blob.pos.x, -blob.pos.y);
+
+
 	  
 	var powerUI = blob.power.toString();
 	var speedUI = blob.speed.toString();
