@@ -181,7 +181,23 @@ function setup() {
 		blob.updateStats(data.alive, data.r, data.p, data.s, data.d);
 		//console.log(blob.r +", "+blob.power+", "+blob.speed+", "+blob.defense);
 	});
-	
+}
+
+function draw() {
+  background(0);
+  
+  
+  //fill(255);
+  //rect(0, 0, 100, 100);
+  //console.log(blob.alive);
+  if(blob.alive)
+  {
+	  translate(width / 2, height / 2);
+	  var newzoom = SCOPE * SIZE / blob.r;
+	  zoom = lerp(zoom, newzoom, 0.1);
+	  scale(zoom);
+	  translate(-blob.pos.x, -blob.pos.y);
+
 	noiseSeed(420);
 	noStroke();
 	var a = 0.0;
@@ -202,24 +218,6 @@ function setup() {
 			rect(x*scl, y*scl, scl, scl);
 		}
 	}
-}
-
-function draw() {
-  background(0);
-  
-  
-  //fill(255);
-  //rect(0, 0, 100, 100);
-  //console.log(blob.alive);
-  if(blob.alive)
-  {
-	  translate(width / 2, height / 2);
-	  var newzoom = SCOPE * SIZE / blob.r;
-	  zoom = lerp(zoom, newzoom, 0.1);
-	  scale(zoom);
-	  translate(-blob.pos.x, -blob.pos.y);
-
-
 	  
 	var powerUI = blob.power.toString();
 	var speedUI = blob.speed.toString();
