@@ -172,15 +172,15 @@ function Blob(alive, id,x,y,r, power, speed, defense){
   
 
   this.constrain = function() {
-	if(this.pos.x + this.r > 500 || this.pos.x - this.r < -500)
+	if(this.pos.x + this.r > scl || this.pos.x - this.r < -scl)
 	{
 		this.vel.x = -this.vel.x;
-		this.pos.x = constrain(this.pos.x, -500, 500);
+		this.pos.x = constrain(this.pos.x, -scl, scl);
 	}
-	if(this.pos.y + this.r > 500 || this.pos.y - this.r < -500)
+	if(this.pos.y + this.r > scl || this.pos.y - this.r < -scl)
 	{
 		this.vel.y = -this.vel.y;
-		this.pos.y = constrain(this.pos.y, -500, 500);
+		this.pos.y = constrain(this.pos.y, -scl, scl);
 	}
   }
  
