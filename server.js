@@ -6,8 +6,8 @@ var maxW = 500;
 var bullets = [];
 var bulletCount = 0;
 var PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679;
-var NUMBEROFAI = 25; 
-var NUMBEROFFRUITS = 30;
+var NUMBEROFAI = 3; 
+var NUMBEROFFRUITS = 100;
 
 var Vec2 = require('vec2');
 
@@ -83,6 +83,8 @@ function Blob(id, x, y, r, power, speed, defense){
   
   this.updateForce = function()
   {
+	this.dragForce();
+	
     if(this.vel.length() > this.speed)
     {
       this.vel.normalize();
@@ -129,6 +131,25 @@ function Blob(id, x, y, r, power, speed, defense){
   {
     this.totalStats = this.power + this.speed + this.defense;
     this.colors = [255*power/this.totalStats, 255*speed/this.totalStats, 255*defense/this.totalStats];
+  }
+  
+  this.dragForce = function()
+  {
+	//drag force
+	var drag = this.vel.clone();
+	drag.normalize();
+	var resistance = this.vel.lengthSquared();
+	if(!isNaN(resistance))
+	{
+		var normalForce = this.r * resistance;
+	}
+	else
+	{
+		var normalForce = this.r;
+	}
+	
+	drag.multiply(-1 * normalForce);
+	this.applyForce(drag);
   }
 
   this.runTo = function(other)
@@ -382,66 +403,62 @@ function updateProjectiles(units)
 
 function checkCollisions()
 {
-  for(i = 0; i<blobs.length; i++)
+  for(i = blobs.length-1; i>=0; i--)
   {
     if(blobs[i].alive)
     {
-      //check against a player collision
-      for(j = blobs.length-1; j>=0; j--)
-      {
-        if(blobs[j].alive)
-        {
-          var distance = blobs[i].pos.distance(blobs[j].pos);        
-          if(distance <= blobs[i].r + blobs[j].r)
-          {
-            if(blobs[i].eat(blobs[j], 1))
-            {
-              blobs[j].disable();
-              break;
-            }
-          } 
-        }
-      }
-      
-      if(blobs[i]!==undefined)
-      {
-        //check against a bullet collision
-        for(k = 0; k<bullets.length; k++)
-        {
-          if(bullets[k].active && (bullets[k].id !== blobs[i].id))
-          {
-            var distance = blobs[i].pos.distance(bullets[k].pos);
-            
-            if(distance <= blobs[i].r + bullets[k].r)
-            {
-              babyBlobR = blobs[i].hitBy(bullets[k])
-              if(babyBlobR)
-              {
-                //console.log("MAKING NEW BLOB: radius" + babyBlobR);
-                makeBabyBlob(blobs[i], babyBlobR, i);
-              }
-              bullets[k].disable();
-            }
-          }
-        }
-        //check against a fruit collision
-        for(f = food.length-1; f>=0; f--)
-        {
-          if(food[f].alive)
-          {
-            var distance = (blobs[i].pos).distance(food[f].pos);
-            var target = blobs[i].r + food[f].r;
-            //console.log(distance +", "+ target);
-            if(distance <= blobs[i].r + food[f].r)
-            {
-              blobs[i].eat(food[f], 0)
-              {
-                food[f].disable();
-              }
-            }
-          }
-        }
-      } 
+		//check against a player collision
+		for(j = blobs.length-1; j>=0; j--)
+		{
+			if(blobs[j].alive)
+			{
+			  var distance = blobs[i].pos.distance(blobs[j].pos);        
+			  if(distance <= blobs[i].r + blobs[j].r)
+			  {
+				if(blobs[i].eat(blobs[j], 1))
+				{
+				  blobs[j].disable();
+				  break;
+				}
+			  } 
+			}
+		} 
+		//check against a bullet collision
+		for(k = 0; k<bullets.length; k++)
+		{
+		  if(bullets[k].active && (bullets[k].id !== blobs[i].id))
+		  {
+			var distance = blobs[i].pos.distance(bullets[k].pos);
+			
+			if(distance <= blobs[i].r + bullets[k].r)
+			{
+			  babyBlobR = blobs[i].hitBy(bullets[k])
+			  if(babyBlobR)
+			  {
+				//console.log("MAKING NEW BLOB: radius" + babyBlobR);
+				makeBabyBlob(blobs[i], babyBlobR, i);
+			  }
+			  bullets[k].disable();
+			}
+		  }
+		}
+		//check against a fruit collision
+		for(f = food.length-1; f>=0; f--)
+		{
+		  if(food[f].alive)
+		  {
+			var distance = (blobs[i].pos).distance(food[f].pos);
+			var target = blobs[i].r + food[f].r;
+			//console.log(distance +", "+ target);
+			if(distance <= blobs[i].r + food[f].r)
+			{
+			  blobs[i].eat(food[f], 0)
+			  {
+				food[f].disable();
+			  }
+			}
+		  }
+		}
     }
   }
 }
@@ -467,7 +484,7 @@ function makeBabyBlob(parent, size, index)
 function setup() 
 { 
   spawnFood(NUMBEROFFRUITS);
-  //spawnAI(NUMBEROFAI);
+  spawnAI(NUMBEROFAI);
   var emptyBullet = new Projectile(0, 0, 0, 0, 0, 0, 0);
   bullets[bulletCount] = emptyBullet;
   console.log("Set up complete");

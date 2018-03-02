@@ -27,22 +27,29 @@ function Blob(alive, id,x,y,r, power, speed, defense){
 
   this.update = function()
   {
-    var newvel = createVector(mouseX-width/2, mouseY-height/2);
-    newvel.setMag(this.speed * this.speed);
-	this.applyForce(newvel);
-	//backforce
-	//var backforce = this.vel.copy();
-	//.setMag(this.r * backforce.magSq());
-	//backforce.rotate(180);
-	//this.applyForce(backforce);
+	//seek force
+    var seek = createVector(mouseX-width/2, mouseY-height/2);
+    seek.x = constrain(seek.x, -width/4, width/4);
+	seek.y = constrain(seek.y, -height/4, height/4);
+	seek.div(2);
+	this.applyForce(seek);
+
+	
+	//drag force
+	var drag = this.vel.copy();
+	drag.normalize();
+	var normalForce = this.r * this.vel.magSq();
+	drag.mult(-1 * normalForce);
+	
+	//
+	this.applyForce(drag);
 	this.updateForces();
   }
   
   this.recoil = function(forwardForce, totalPower)
   {
 	  force = forwardForce.copy();
-      force.rotate(180);
-      force.mult((this.speed * totalPower)/this.defense);
+      force.mult(-(this.speed * totalPower)/this.defense);
 	  this.applyForce(force);
   }
   
@@ -165,14 +172,15 @@ function Blob(alive, id,x,y,r, power, speed, defense){
   
 
   this.constrain = function() {
-    //this.pos.x = constrain(this.pos.x, -500, 500);
 	if(this.pos.x + this.r > 500 || this.pos.x - this.r < -500)
 	{
 		this.vel.x = -this.vel.x;
+		this.pos.x = constrain(this.pos.x, -500, 500);
 	}
 	if(this.pos.y + this.r > 500 || this.pos.y - this.r < -500)
 	{
 		this.vel.y = -this.vel.y;
+		this.pos.y = constrain(this.pos.y, -500, 500);
 	}
   }
  
