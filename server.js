@@ -234,7 +234,7 @@ function Blob(id, x, y, r, power, speed, defense){
   
   this.hitBy = function(bullet)
   {
-    var change = Math.max(bullet.r - this.defense, 0); 
+    var change = Math.max((bullet.r * bullet.r)/this.defense, 0); 
     if(change>0)
     {
       return this.shrink(change);
