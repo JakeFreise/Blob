@@ -31,10 +31,10 @@ function Blob(alive, id,x,y,r, power, speed, defense){
     newvel.setMag(this.speed * this.speed);
 	this.applyForce(newvel);
 	//backforce
-	var backforce = this.vel.copy();
-	backforce.setMag(this.r * backforce.magSq());
-	backforce.rotate(180);
-	this.applyForce(backforce);
+	//var backforce = this.vel.copy();
+	//.setMag(this.r * backforce.magSq());
+	//backforce.rotate(180);
+	//this.applyForce(backforce);
 	this.updateForces();
   }
   
@@ -168,7 +168,6 @@ function Blob(alive, id,x,y,r, power, speed, defense){
     //this.pos.x = constrain(this.pos.x, -500, 500);
 	if(this.pos.x + this.r > 500 || this.pos.x - this.r < -500)
 	{
-		this.vel.div(2);
 		this.vel.x = -this.vel.x;
 	}
 	if(this.pos.y + this.r > 500 || this.pos.y - this.r < -500)
